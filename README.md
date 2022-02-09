@@ -13,7 +13,7 @@ url|是|网址
 ---|---
 state|状态码
 information|信息
-#### 响应(information)
+#### information
 名称|说明
 ---|---
 preview_url|预览网址
