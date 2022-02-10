@@ -8,8 +8,7 @@
         mkdir(DATA_PATH);
     }
     
-    class PHPZip
-    {
+    class PHPZip {
         private $ctrl_dir     = array();
         private $datasec      = array();
         var $fileList = array();
@@ -116,7 +115,6 @@
             $this->ctrl_dir[] = $cdrec;
         }
         
-        
         var $eof_ctrl_dir = "\x50\x4b\x05\x06\x00\x00\x00\x00";
         private function file()
         {
@@ -162,6 +160,24 @@
             fwrite($fp, $out, strlen($out));
             fclose($fp);
         }
+    }
+    
+    function delete_dir($path) {
+        if (is_dir($path)) {
+            $file = scandir($path);
+            if (count($file) > 2) {
+                foreach ($file as $value) {
+                    if ($value != '.' && $value != '..') {
+                        if (is_dir($path.$value)) {
+                            delete_dir($path.$value.'/');
+                        } else {
+                            unlink($path.$value);
+                        }
+                    }
+                }
+            }
+        }
+        return rmdir($path);
     }
     
     function is_https() {
@@ -210,8 +226,9 @@
     rename(DATA_PATH.$imitate_domain, DATA_PATH.$new_imitate_domain);
     $zip = new PHPZip();
     $zip->Zip(DATA_PATH.$new_imitate_domain, DATA_PATH.$new_imitate_domain.'.zip');
+    delete_dir(DATA_PATH.$new_imitate_domain.'/');
     $information = array(
-        'preview_url'=>$local_url.$new_imitate_domain.'/',
+        // 'preview_url'=>$local_url.$new_imitate_domain.'/',
     	'download_url'=>$local_url.$new_imitate_domain.'.zip'
     );
     return_result($information);
